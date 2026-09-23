@@ -17,7 +17,6 @@ TEST_SET = [
     {"question": "Can I cancel only some passengers in a group booking, not all of them?", "expected_chunk": "chunk_8"},
 ]
 
-
 def evaluate_hit_rate(index_path: str, meta_path: str, model_name: str, k: int) -> float:
     model = TextEmbedding(model_name=model_name)
     index = faiss.read_index(index_path)
@@ -34,7 +33,6 @@ def evaluate_hit_rate(index_path: str, meta_path: str, model_name: str, k: int) 
             hits += 1
 
     return hits / len(TEST_SET)
-
 
 if __name__ == "__main__":
     print("Evaluating retrieval quality (Hit Rate @ k)\n")

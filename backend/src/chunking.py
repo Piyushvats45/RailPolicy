@@ -3,7 +3,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # backend/
 
-
 def faq_pairs_as_chunks(faqs: list[dict]) -> list[dict]:
     """Each Q&A pair is already a self-contained, single-topic unit."""
     chunks = []

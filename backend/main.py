@@ -9,9 +9,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI(title="IRCTC Policy Assistant API")
 
-# Local dev origins are always allowed. Add your deployed frontend's URL via
-# the FRONTEND_URL env var (set this in Render's dashboard) so the deployed
-# React app is allowed to call this API too.
 default_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 extra_origin = os.environ.get("FRONTEND_URL")
 allowed_origins = default_origins + ([extra_origin] if extra_origin else [])
@@ -24,7 +21,6 @@ app.add_middleware(
 )
 
 rag: RAGPipeline | None = None
-
 
 @app.on_event("startup")
 def load_pipeline():

@@ -4,8 +4,7 @@ A retrieval-augmented generation (RAG) system that answers questions about
 IRCTC's train ticket cancellation and refund policy, grounded in a real
 FAQ knowledge base, with cited sources instead of hallucinated answers.
 Full-stack: a FastAPI backend serving the RAG pipeline, and a React
-frontend for a real chat UI. The LLM runs locally via Ollama, so the
-whole project is free to run with no API costs.
+frontend for a real chat UI. The LLM runs locally via Ollama.
 
 ## Why this problem
 
@@ -14,6 +13,9 @@ exactly where LLMs confidently hallucinate incorrect details if asked
 from memory alone. RAG fixes that: answers are traceable back to a real
 source chunk, and the model is instructed to say "I don't know" rather
 than guess.
+
+## Live URL
+https://rail-policy.vercel.app
 
 ## Architecture
 
@@ -40,7 +42,7 @@ Grounded, cited answer -> returned as JSON -> rendered in the chat UI
 ## Project structure
 
 ```
-rag-faq-assistant/
+RailPolicy/
 ├── backend/
 │   ├── data/
 │   │   ├── scrape_faqs.py      # generic scraper template
@@ -69,104 +71,3 @@ rag-faq-assistant/
             └── ChatInput.jsx
 ```
 
-## Setup
-
-**1. Install Ollama (free local LLM, no API key):**
-```bash
-brew install ollama          # or download from https://ollama.com
-ollama serve &
-ollama pull llama3.2:3b
-```
-
-**2. Backend:**
-```bash
-cd backend
-pip install -r requirements.txt
-
-python src/chunking.py       # build chunks.json
-python src/build_index.py    # build the FAISS index
-python main.py                # starts API at http://localhost:8000
-```
-
-**3. Frontend (in a new terminal):**
-```bash
-cd frontend
-npm install
-npm run dev                   # starts at http://localhost:5173
-```
-
-Open http://localhost:5173 — the chat UI talks to the FastAPI backend,
-which talks to your local Ollama server.
-
-**4. Evaluate retrieval quality (optional):**
-```bash
-cd backend
-python evaluate.py
-```
-
-## Design decisions and trade-offs I tested
-
-- **LLM choice**: a local model (`llama3.2:3b` via Ollama) instead of a
-  paid API. Keeps the project fully free and able to run offline. Known
-  trade-off: lower answer quality than GPT-4o/Claude on harder questions.
-  The code is structured so swapping in a hosted API is a small,
-  contained change in `rag_pipeline.py`.
-- **Chunking strategy**: FAQ data is already naturally chunked into
-  single-topic Q&A pairs, so I chunk on that boundary rather than a fixed
-  sliding window, which would risk splitting a question from its answer.
-  A general sliding-window chunker is also implemented for unstructured
-  documents that aren't pre-split like FAQs.
-- **Embedding model**: `all-MiniLM-L6-v2` (384-dim, CPU-only) instead of a
-  larger model. On a small knowledge base the accuracy gap is minimal,
-  and a free, local, fast model is the right trade-off.
-- **Retrieval k**: measured Hit Rate @ k for k = 1, 2, 3, 5 in
-  `evaluate.py` to find the smallest k that reliably retrieves the
-  correct source, rather than guessing a value.
-- **Grounding, not memory**: the generation prompt explicitly restricts
-  the model to retrieved chunks, asks it to cite source numbers, and to
-  say when it doesn't know, rather than answering from training data.
-- **Frontend architecture**: a plain conversation log (not floating
-  shadowed bubble cards) with sources shown as separate, collapsible
-  "ticket stub" cards, so the grounding/citation mechanism is visible to
-  the user rather than hidden — the UI reflects the actual architecture.
-
-## Deploying it (live, on the internet)
-
-Ollama needs a machine with the model actually loaded, which free cloud
-tiers (Render, Railway) don't support well. So for a live deployment,
-swap the LLM provider from Ollama to **Groq's free API** (still $0 cost,
-just hosted instead of local) via one environment variable. Keep Ollama
-for local development.
-
-**1. Get a free Groq API key:** https://console.groq.com (no card required).
-
-**2. Deploy the backend to Render:**
-- Push this repo to GitHub.
-- On Render: New → Web Service → connect the repo → it auto-detects `render.yaml`.
-- In the service's Environment tab, set `GROQ_API_KEY` to your key.
-- Deploy. Note the URL Render gives you, e.g. `https://irctc-policy-assistant-api.onrender.com`.
-
-**3. Deploy the frontend to Vercel:**
-- On Vercel: New Project → import the same repo → set root directory to `frontend`.
-- Add an environment variable: `VITE_API_BASE_URL` = your Render backend URL from step 2.
-- Deploy. Vercel gives you a URL like `https://your-app.vercel.app`.
-
-**4. Close the loop:** go back to Render, set the `FRONTEND_URL` env var to
-your Vercel URL (so CORS allows it), and redeploy the backend.
-
-You now have a live link you can put directly on your resume/LinkedIn.
-
-**Cost check:** Render's free web service tier spins down when idle and
-takes ~30-60s to wake on the first request after inactivity -- normal for
-a portfolio demo, just don't be surprised by it live in an interview.
-Groq's free tier has generous but rate-limited usage; fine for demo traffic.
-
-## Possible extensions
-
-- Add re-ranking (cross-encoder) on top of FAISS retrieval for larger
-  knowledge bases.
-- Add an LLM-as-judge evaluation step scoring whether the generated
-  answer matches the expected answer's meaning, not just chunk retrieval.
-- Swap the local LLM for a hosted API and compare answer quality head-to-head.
-- Add conversation memory (multi-turn follow-up questions referencing
-  earlier answers).

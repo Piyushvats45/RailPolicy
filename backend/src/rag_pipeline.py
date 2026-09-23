@@ -7,19 +7,14 @@ import faiss
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # backend/
 EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
-# LLM_PROVIDER controls where generation happens:
-#   "ollama" (default) -> free, local, runs on your own machine. Use for local dev.
-#   "groq"             -> free-tier hosted API. Use this in cloud deployments
-#                         (Render/Railway free tiers can't run Ollama -- not
-#                         enough RAM/CPU to host a model server).
 LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "ollama")
 OLLAMA_MODEL = "llama3.2:3b"
-GROQ_MODEL = "openai/gpt-oss-20b"   # free tier on Groq as of writing
+GROQ_MODEL = "openai/gpt-oss-20b"  
 
 if LLM_PROVIDER == "groq":
-    from groq import Groq  # pip install groq
+    from groq import Groq 
 else:
-    import ollama  # pip install ollama -- talks to local Ollama server, no API key
+    import ollama
 
 
 class RAGPipeline:

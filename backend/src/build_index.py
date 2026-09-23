@@ -8,7 +8,6 @@ import faiss
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # backend/
 EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
-
 def build_index(chunks_path: str, index_out_path: str, meta_out_path: str,
                  model_name: str = EMBED_MODEL_NAME):
     with open(chunks_path, encoding="utf-8") as f:
@@ -35,7 +34,6 @@ def build_index(chunks_path: str, index_out_path: str, meta_out_path: str,
 
     print(f"Index built: {index.ntotal} vectors, dim={dim}")
     print(f"Saved index to {index_out_path}, metadata to {meta_out_path}")
-
 
 if __name__ == "__main__":
     build_index(
