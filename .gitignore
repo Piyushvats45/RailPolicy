@@ -1,0 +1,13 @@
+node_modules/
+__pycache__/
+*.pyc
+backend/data/chunks.json
+backend/data/faq_index.faiss
+backend/data/faq_meta.pkl
+.DS_Store
+
+backend/venv/
+venv/
+.venv/
+.env
+frontend/node_modules/

@@ -1,0 +1,52 @@
+[
+  {
+    "question": "How do I cancel an e-ticket booked on IRCTC?",
+    "answer": "E-tickets can only be cancelled online through the IRCTC website or app, never at a physical railway counter. Log in, go to the Booked Tickets section, select the passengers you want to cancel, and confirm. The cancellation must be done before the train's chart is prepared, which usually happens the evening before departure for daytime trains.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "What are the cancellation charges for a confirmed ticket?",
+    "answer": "As of the April 2026 revision, cancelling more than 72 hours before departure only costs a flat fee based on class: roughly 240 rupees for AC First, 200 for AC 2 Tier, 180 for AC 3 Tier/Chair Car, 120 for Sleeper, and 60 for Second Sitting. Cancelling between 72 and 24 hours before departure costs about a quarter of the fare. Between 24 and 8 hours before departure, about half the fare is deducted. Cancelling less than 8 hours before departure results in no refund at all.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "What happens if my waitlisted ticket never gets confirmed?",
+    "answer": "If a fully waitlisted ticket does not get confirmed by the time the chart is prepared, it is automatically cancelled by the system and the full fare is refunded to the original payment method, with no cancellation charge and no need to file a TDR (Ticket Deposit Receipt). This automatic refund only applies if the passenger did not manually cancel the ticket first; a manual cancellation before chart preparation falls back into the normal cancellation charge slabs.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "What about RAC (Reservation Against Cancellation) tickets that don't confirm?",
+    "answer": "RAC tickets are treated the same way as waitlisted tickets in this respect: if the RAC ticket does not move to fully confirmed status by chart preparation, it is automatically cancelled and the passenger receives a full refund with no deduction, without needing to file a TDR.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "Can I cancel my ticket after the chart has already been prepared?",
+    "answer": "Once the chart is prepared, online cancellation is no longer available. Instead, the passenger must file an online TDR (Ticket Deposit Receipt) claim. The TDR should be filed at least 30 minutes after the train's scheduled departure. Indian Railways then reviews the claim and decides the refund amount, and this process can take significantly longer than a standard online cancellation -- sometimes up to around 60 days for offline or TDR-based refunds.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "How long does it take to get my refund after cancelling online?",
+    "answer": "For a standard online cancellation done before chart preparation, refunds are typically credited back to the original payment method within about 5 to 7 working days, though the exact timing can vary depending on the payment method used and the bank's processing time.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "Can I get a refund for a confirmed Tatkal ticket?",
+    "answer": "No. Confirmed Tatkal tickets are not eligible for a refund on cancellation, regardless of how far in advance the cancellation is made. This is a key difference from regular confirmed tickets, which follow the standard time-based cancellation charge slabs.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "What is clerkage charge and when does it apply?",
+    "answer": "Clerkage is a small fixed charge, around 60 rupees per passenger, deducted when a fully waitlisted ticket is automatically cancelled after chart preparation. GST is added on top of this for AC classes but not for non-AC classes.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "Can I cancel just one passenger out of a group booking?",
+    "answer": "Yes, partial cancellation is allowed. You can select specific passengers to cancel within a single ticket booking. If some passengers continue their journey, a fresh Electronic Reservation Slip (ERS) must be printed separately for them, since the original ERS listed the now-cancelled passengers too.",
+    "source_url": "sample_dataset"
+  },
+  {
+    "question": "What if my ticket booking shows 'not booked' or fails after payment?",
+    "answer": "If a booking attempt shows a failure or 'ticket not booked' message after payment, it's recommended to wait at least 15-20 minutes before attempting to book again, since the system may still be processing the original transaction. This is especially important for Tatkal bookings, where a duplicate booking attempt is riskier because confirmed Tatkal tickets carry no cancellation refund.",
+    "source_url": "sample_dataset"
+  }
+]
