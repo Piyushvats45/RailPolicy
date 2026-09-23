@@ -2,26 +2,28 @@ import json
 import os
 import pickle
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 import faiss
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # backend/
+EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
 
 def build_index(chunks_path: str, index_out_path: str, meta_out_path: str,
-                 model_name: str = "all-MiniLM-L6-v2"):
+                 model_name: str = EMBED_MODEL_NAME):
     with open(chunks_path, encoding="utf-8") as f:
         chunks = json.load(f)
 
     print(f"Loading embedding model: {model_name} ...")
-    model = SentenceTransformer(model_name)
+    model = TextEmbedding(model_name=model_name)
 
     texts = [c["text"] for c in chunks]
     print(f"Embedding {len(texts)} chunks ...")
-    # normalize_embeddings=True -> unit-length vectors, so a simple
-    # inner-product index gives us cosine similarity "for free".
-    embeddings = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
-    embeddings = np.array(embeddings).astype("float32")
+    embeddings = np.array(list(model.embed(texts))).astype("float32")
+
+    # Normalize explicitly (unit length) so IndexFlatIP gives cosine similarity.
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    embeddings = embeddings / norms
 
     dim = embeddings.shape[1]
     index = faiss.IndexFlatIP(dim)

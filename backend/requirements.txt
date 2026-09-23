@@ -1,6 +1,6 @@
 requests
 beautifulsoup4
-sentence-transformers
+fastembed
 faiss-cpu
 numpy
 ollama

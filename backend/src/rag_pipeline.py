@@ -1,11 +1,11 @@
 import os
 import pickle
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 import faiss
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # backend/
-EMBED_MODEL_NAME = "all-MiniLM-L6-v2"
+EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 
 # LLM_PROVIDER controls where generation happens:
 #   "ollama" (default) -> free, local, runs on your own machine. Use for local dev.
@@ -17,14 +17,14 @@ OLLAMA_MODEL = "llama3.2:3b"
 GROQ_MODEL = "llama-3.1-8b-instant"  # free tier on Groq as of writing
 
 if LLM_PROVIDER == "groq":
-    from groq import Groq  
+    from groq import Groq  # pip install groq
 else:
-    import ollama 
+    import ollama  # pip install ollama -- talks to local Ollama server, no API key
 
 
 class RAGPipeline:
     def __init__(self, index_path: str, meta_path: str):
-        self.embed_model = SentenceTransformer(EMBED_MODEL_NAME)
+        self.embed_model = TextEmbedding(model_name=EMBED_MODEL_NAME)
         self.index = faiss.read_index(index_path)
         with open(meta_path, "rb") as f:
             self.chunks = pickle.load(f)
@@ -33,8 +33,8 @@ class RAGPipeline:
             self.groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
     def retrieve(self, query: str, k: int = 3) -> list[dict]:
-        query_vec = self.embed_model.encode([query], normalize_embeddings=True)
-        query_vec = np.array(query_vec).astype("float32")
+        query_vec = np.array(list(self.embed_model.embed([query]))).astype("float32")
+        query_vec = query_vec / np.linalg.norm(query_vec, axis=1, keepdims=True)
 
         scores, indices = self.index.search(query_vec, k)
         results = []
