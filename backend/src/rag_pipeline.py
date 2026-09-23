@@ -14,7 +14,7 @@ EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
 #                         enough RAM/CPU to host a model server).
 LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "ollama")
 OLLAMA_MODEL = "llama3.2:3b"
-GROQ_MODEL = "llama-3.1-8b-instant"  # free tier on Groq as of writing
+GROQ_MODEL = "openai/gpt-oss-20b"   # free tier on Groq as of writing
 
 if LLM_PROVIDER == "groq":
     from groq import Groq  # pip install groq
